@@ -54,13 +54,41 @@ class Troop():
     def __str__(self):
         return self.name
 
-grid = Grid(5, 5)
-infantry = Troop("Infantry")
-archer = Troop("Archer")
-grid.place_troop(infantry, 0, 1)
-grid.place_troop(archer, 3, 1)
-print(grid)
-archer.move(grid, (1, 2))
+# grid = Grid(5, 5)
+# infantry = Troop("Infantry")
+# archer = Troop("Archer")
+# grid.place_troop(infantry, 0, 1)
+# grid.place_troop(archer, 3, 1)
+# print(grid)
+# archer.move(grid, (1, 2))
 
-print()
-print(grid)
+# print()
+# print(grid)
+
+# grid = Grid(10, 10)
+# print(grid)
+# print("\n\n\n\n")
+# infantry = []
+# for _ in range(5):
+#     infantry.append(Troop("Infantry"))
+
+# tmp = 0
+# for soldier in infantry:
+#     grid.place_troop(soldier, 1, tmp)
+#     tmp += 1
+
+# print(grid)
+
+# import os
+# import time
+# os.system("clear")
+# print(grid)
+# i1 = Troop("Archer")
+# grid.place_troop(i1, 5, 3)
+# for i in range(10):
+#     for soldier in infantry:
+#         soldier.move(grid, (1, 0))
+#     time.sleep(1)
+#     os.system('clear')
+#     print(grid)
+    
