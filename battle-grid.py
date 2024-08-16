@@ -5,11 +5,14 @@ class Grid():
         self.cols = cols
 
     def is_within_bound(self, x, y):
-        return 0 <= x <= self.rows and 0 <= y <= self.cols
+        return 0 <= x < self.rows and 0 <= y < self.cols
 
     def is_cell_empty(self, x, y):
-        return self.is_within_bound(x, y) and self.grid[x][y] is None
-
+        if self.is_within_bound(x, y):
+            if self.grid[x][y] is None:
+                return True
+        return False
+        
     def place_troop(self,troop, x, y):
         if self.is_cell_empty(x, y):
             self.grid[x][y] = troop
@@ -44,7 +47,7 @@ class Troop():
 
     def move(self, grid, dir):
         new_pos = tuple(map(sum, zip(self.position, dir)))
-        if grid.is_cell_empty(*new_pos) and (dir[0] + dir[1]) <= self.mov_speed:
+        if grid.is_cell_empty(*new_pos) and (abs(dir[0]) + abs(dir[1])) <= self.mov_speed:
             grid.remove_troop(*self.position)
             grid.place_troop(self, *new_pos)
         
@@ -55,9 +58,9 @@ grid = Grid(5, 5)
 infantry = Troop("Infantry")
 archer = Troop("Archer")
 grid.place_troop(infantry, 0, 1)
-grid.place_troop(archer, 3, 3)
+grid.place_troop(archer, 3, 1)
 print(grid)
-archer.move(grid, (0, 1))
+archer.move(grid, (1, 2))
 
 print()
 print(grid)
