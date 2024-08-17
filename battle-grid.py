@@ -1,3 +1,6 @@
+import os
+import time
+
 class Grid():
     def __init__(self, rows, cols):
         self.grid = [[None for _ in range(cols)] for _ in range(rows)]
@@ -13,9 +16,9 @@ class Grid():
                 return True
         return False
         
-    def place_troop(self,troop, x, y):
+    def place_troop(self, troop, x, y, number):
         if self.is_cell_empty(x, y):
-            self.grid[x][y] = troop
+            self.grid[x][y] = troop.name + str(number)
             troop.position = (x, y)
             return True
         return False
@@ -27,8 +30,18 @@ class Grid():
     def get_state(self):
         return [[cell if cell else "." for cell in row] for row in self.grid]
 
+    def march(self, team1, team2):
+        for i in range(5):
+            for element in team1.army:
+                element.move(self, (1, 0), team1.number)
+            for element in team2.army:
+                element.move(self, (-1, 0), team2.number)
+            time.sleep(1)
+            os.system('clear')
+            print(self)
+
     def __str__(self):
-        return "\n".join([" ".join([str(cell) if cell else "." for cell in row]) for row in self.grid])
+        return "\n".join([" ".join([str(cell) if cell else ". " for cell in row]) for row in self.grid])
 
 class Troop():
     def __init__(self, type):
@@ -43,16 +56,62 @@ class Troop():
             self.name = "A"
             self.HP = 50
             self.attack = 15
-            self.mov_speed= 3
+            self.mov_speed = 3
 
-    def move(self, grid, dir):
-        new_pos = tuple(map(sum, zip(self.position, dir)))
+    def move(self, grid, dir, number):
+        if self.position is None:
+            return
+        new_pos = tuple(map(sum, zip(self.position, dir)))    
         if grid.is_cell_empty(*new_pos) and (abs(dir[0]) + abs(dir[1])) <= self.mov_speed:
             grid.remove_troop(*self.position)
-            grid.place_troop(self, *new_pos)
+            grid.place_troop(self, *new_pos, number)
         
     def __str__(self):
         return self.name
+    
+
+class Team():
+    id = 1
+
+    def __init__(self, name):
+        self.name = name
+        self.number = Team.id
+        self.army = []
+        Team.id += 1
+
+    def show(self, grid):
+        print(grid)
+
+    def place(self, grid, troop_type, num_troop):
+        tmp = 0
+        for i in range(num_troop):
+            troop = Troop(troop_type)
+            self.army.append(troop)
+            if self.number == 1:
+                grid.place_troop(troop, 0, tmp, self.number)
+            else:
+                grid.place_troop(troop, 9, tmp, self.number)
+            tmp += 1
+
+    def __str__(self):
+        return self.name
+
+
+grid = Grid(10, 10)
+print(grid)
+print("\n\n")
+
+team1 = Team("A")
+team2 = Team("B")
+
+team1.place(grid, "Infantry", 5)
+team2.place(grid, "Infantry", 5)
+print(grid)
+
+grid.march(team1, team2)
+print("\n\n")
+
+
 
 # grid = Grid(5, 5)
 # infantry = Troop("Infantry")
@@ -64,27 +123,26 @@ class Troop():
 
 # print()
 # print(grid)
-
-# grid = Grid(10, 10)
-# print(grid)
-# print("\n\n\n\n")
-# infantry = []
+# infantry1 = []
 # for _ in range(5):
-#     infantry.append(Troop("Infantry"))
+#     infantry1.append(Troop("Infantry"))
 
 # tmp = 0
-# for soldier in infantry:
+# for soldier in infantry1:
 #     grid.place_troop(soldier, 1, tmp)
 #     tmp += 1
 
-# print(grid)
+# infantry2 = []
+# for _ in range(5):
+#     infantry2.append(Troop("Infantry"))
 
-# import os
-# import time
-# os.system("clear")
-# print(grid)
-# i1 = Troop("Archer")
-# grid.place_troop(i1, 5, 3)
+# tmp = 0
+# for soldier in infantry2:
+#     grid.place_troop(soldier, 10, tmp)
+#     tmp += 1
+
+#print(grid)
+
 # for i in range(10):
 #     for soldier in infantry:
 #         soldier.move(grid, (1, 0))
